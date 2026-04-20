@@ -1,3 +1,8 @@
 # Welcome to your Lovable project
 
-TODO: Document your project here
+- npm install
+- npx cap add ios
+- npx cap update ios
+- npm run build
+- npx cap sync
+- npx cap run ios
