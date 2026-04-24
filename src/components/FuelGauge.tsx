@@ -49,16 +49,16 @@ export function FuelGauge({ percent, liters, capacity, range, low }: Props) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Fuel left</div>
+        <div className="text-xs uppercase tracking-widest text-muted-foreground">Остаток топлива</div>
         <div className="num text-6xl font-semibold mt-1">
           {liters.toFixed(1)}
-          <span className="text-2xl text-muted-foreground font-normal ml-1">L</span>
+          <span className="text-2xl text-muted-foreground font-normal ml-1">л</span>
         </div>
         <div className="num text-sm text-muted-foreground mt-2">
-          of {capacity} L · {Math.round(clamped)}%
+          из {capacity} л · {Math.round(clamped)}%
         </div>
         <div className="num text-sm mt-1">
-          ~<span className="font-medium">{Math.round(range)}</span> km range
+          ~<span className="font-medium">{Math.round(range)}</span> км пробега
         </div>
       </div>
     </div>

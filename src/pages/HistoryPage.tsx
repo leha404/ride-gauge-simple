@@ -4,7 +4,7 @@ import { Fuel, MapPin, Pencil, Trash2 } from "lucide-react";
 import { HistoryEntry } from "@/lib/storage";
 
 const fmt = (ts: number) =>
-  new Date(ts).toLocaleString(undefined, {
+  new Date(ts).toLocaleString("ru-RU", {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -12,9 +12,9 @@ const fmt = (ts: number) =>
   });
 
 function rowMeta(e: HistoryEntry) {
-  if (e.type === "trip") return { Icon: MapPin, label: "Trip", value: `−${e.value.toFixed(1)} km`, color: "text-muted-foreground" };
-  if (e.type === "refuel") return { Icon: Fuel, label: "Refuel", value: `+${e.value.toFixed(2)} L`, color: "text-primary" };
-  return { Icon: Pencil, label: "Set fuel", value: `${e.value.toFixed(2)} L`, color: "text-foreground" };
+  if (e.type === "trip") return { Icon: MapPin, label: "Поездка", value: `−${e.value.toFixed(1)} км`, color: "text-muted-foreground" };
+  if (e.type === "refuel") return { Icon: Fuel, label: "Заправка", value: `+${e.value.toFixed(2)} л`, color: "text-primary" };
+  return { Icon: Pencil, label: "Установлено", value: `${e.value.toFixed(2)} л`, color: "text-foreground" };
 }
 
 export default function HistoryPage() {
@@ -22,15 +22,15 @@ export default function HistoryPage() {
 
   return (
     <div className="pt-6">
-      <h1 className="text-2xl font-semibold">History</h1>
+      <h1 className="text-2xl font-semibold">История</h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Local entries only. Deleting an entry doesn't recalculate current fuel.
+        Только локальные записи. Удаление записи не пересчитывает текущий уровень топлива.
       </p>
 
       {history.length === 0 ? (
         <div className="mt-16 flex flex-col items-center text-center text-muted-foreground">
           <Fuel className="h-10 w-10 opacity-50" />
-          <p className="mt-3 text-sm">No entries yet.<br />Add a trip or refuel to get started.</p>
+          <p className="mt-3 text-sm">Пока нет записей.<br />Добавьте поездку или заправку, чтобы начать.</p>
         </div>
       ) : (
         <ul className="mt-6 space-y-2">
@@ -51,7 +51,7 @@ export default function HistoryPage() {
                   </div>
                   <div className="mt-0.5 flex items-baseline justify-between gap-2 text-xs text-muted-foreground">
                     <span>{fmt(e.timestamp)}</span>
-                    <span className="num">→ {e.fuelAfter.toFixed(2)} L</span>
+                    <span className="num">→ {e.fuelAfter.toFixed(2)} л</span>
                   </div>
                 </div>
                 <Button
@@ -59,7 +59,7 @@ export default function HistoryPage() {
                   size="icon"
                   onClick={() => deleteEntry(e.id)}
                   className="h-9 w-9 shrink-0 rounded-xl text-muted-foreground hover:text-destructive"
-                  aria-label="Delete entry"
+                  aria-label="Удалить запись"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

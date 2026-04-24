@@ -32,12 +32,12 @@ export default function SettingsPage() {
 
   return (
     <div className="pt-6 pb-4">
-      <h1 className="text-2xl font-semibold">Settings</h1>
-      <p className="mt-1 text-sm text-muted-foreground">Tune your bike's specs.</p>
+      <h1 className="text-2xl font-semibold">Настройки</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Настройте параметры вашего мотоцикла.</p>
 
       <div className="mt-6 space-y-4">
         <div className="rounded-2xl bg-card p-4">
-          <label className="text-xs uppercase tracking-widest text-muted-foreground">Tank capacity</label>
+          <label className="text-xs uppercase tracking-widest text-muted-foreground">Объем бака</label>
           <div className="relative mt-2">
             <Input
               type="number"
@@ -46,12 +46,12 @@ export default function SettingsPage() {
               onChange={(e) => setTank(e.target.value)}
               className="num h-14 rounded-xl border-border bg-secondary pr-12 text-xl font-semibold"
             />
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">L</span>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">л</span>
           </div>
         </div>
 
         <div className="rounded-2xl bg-card p-4">
-          <label className="text-xs uppercase tracking-widest text-muted-foreground">Average consumption</label>
+          <label className="text-xs uppercase tracking-widest text-muted-foreground">Средний расход</label>
           <div className="relative mt-2">
             <Input
               type="number"
@@ -60,7 +60,7 @@ export default function SettingsPage() {
               onChange={(e) => setCons(e.target.value)}
               className="num h-14 rounded-xl border-border bg-secondary pr-20 text-xl font-semibold"
             />
-            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">L/100km</span>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">л/100 км</span>
           </div>
         </div>
 
@@ -69,7 +69,7 @@ export default function SettingsPage() {
           onClick={() => updateSettings({ tankCapacity: tankN, consumption: consN })}
           className="h-14 w-full rounded-2xl text-base font-semibold"
         >
-          Save changes
+          Сохранить изменения
         </Button>
 
         <div className="grid grid-cols-2 gap-3">
@@ -78,26 +78,26 @@ export default function SettingsPage() {
             onClick={resetSettings}
             className="h-12 rounded-2xl"
           >
-            Reset defaults
+            Сбросить по умолчанию
           </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="secondary" className="h-12 rounded-2xl text-destructive hover:text-destructive">
-                Clear history
+                Очистить историю
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="rounded-2xl">
               <AlertDialogHeader>
-                <AlertDialogTitle>Clear all history?</AlertDialogTitle>
+                <AlertDialogTitle>Очистить всю историю?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This deletes all trip and refuel entries. Your current fuel level is not affected.
+                  Это удалит все записи поездок и заправок. Текущий уровень топлива останется без изменений.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>Отмена</AlertDialogCancel>
                 <AlertDialogAction onClick={clearHistory} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                  Clear
+                  Очистить
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -105,7 +105,7 @@ export default function SettingsPage() {
         </div>
 
         <p className="pt-2 text-center text-xs text-muted-foreground">
-          Defaults: {DEFAULT_SETTINGS.tankCapacity} L · {DEFAULT_SETTINGS.consumption} L/100km
+          Значения по умолчанию: {DEFAULT_SETTINGS.tankCapacity} л · {DEFAULT_SETTINGS.consumption} л/100 км
         </p>
       </div>
     </div>
