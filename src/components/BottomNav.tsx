@@ -3,9 +3,9 @@ import { Home, History, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
-  { to: "/", label: "Home", icon: Home, end: true },
-  { to: "/history", label: "History", icon: History },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/", label: "Главная", icon: Home, end: true },
+  { to: "/history", label: "История", icon: History },
+  { to: "/settings", label: "Настройки", icon: Settings },
 ];
 
 export function BottomNav() {

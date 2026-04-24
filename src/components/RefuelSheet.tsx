@@ -42,7 +42,7 @@ export function RefuelSheet({ open, onOpenChange }: Props) {
     <Sheet open={open} onOpenChange={close}>
       <SheetContent side="bottom" className="rounded-t-3xl border-border bg-card pb-8">
         <SheetHeader>
-          <SheetTitle className="text-2xl">Refuel</SheetTitle>
+          <SheetTitle className="text-2xl">Заправка</SheetTitle>
         </SheetHeader>
 
         <div className="mt-5 grid grid-cols-2 gap-1 rounded-2xl bg-secondary p-1">
@@ -55,7 +55,7 @@ export function RefuelSheet({ open, onOpenChange }: Props) {
                 mode === m ? "bg-background text-foreground shadow-sm" : "text-muted-foreground",
               )}
             >
-              {m === "add" ? "Add liters" : "Set exact"}
+              {m === "add" ? "Добавить литры" : "Точное значение"}
             </button>
           ))}
         </div>
@@ -63,7 +63,7 @@ export function RefuelSheet({ open, onOpenChange }: Props) {
         <div className="mt-5 space-y-5">
           <div>
             <label className="text-xs uppercase tracking-widest text-muted-foreground">
-              {mode === "add" ? "Liters to add" : "Current liters"}
+              {mode === "add" ? "Сколько добавить" : "Текущий объем"}
             </label>
             <div className="relative mt-2">
               <Input
@@ -75,31 +75,31 @@ export function RefuelSheet({ open, onOpenChange }: Props) {
                 autoFocus
                 className="num h-16 rounded-2xl border-border bg-secondary pr-12 text-3xl font-semibold"
               />
-              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground">L</span>
+              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground">л</span>
             </div>
           </div>
 
           {mode === "add" && (
             <div className="grid grid-cols-3 gap-2">
-              <Button variant="secondary" onClick={() => quick(5)} className="h-11 rounded-xl">+5 L</Button>
-              <Button variant="secondary" onClick={() => quick(10)} className="h-11 rounded-xl">+10 L</Button>
+              <Button variant="secondary" onClick={() => quick(5)} className="h-11 rounded-xl">+5 л</Button>
+              <Button variant="secondary" onClick={() => quick(10)} className="h-11 rounded-xl">+10 л</Button>
               <Button variant="secondary" onClick={() => { fillToFull(); onOpenChange(false); }} className="h-11 rounded-xl">
-                Fill up
+                До полного
               </Button>
             </div>
           )}
 
           <div className="rounded-2xl bg-secondary/60 p-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Fuel after</span>
+              <span className="text-muted-foreground">После заправки</span>
               <span className="num font-medium">
-                {after.toFixed(2)} / {settings.tankCapacity} L
+                {after.toFixed(2)} / {settings.tankCapacity} л
               </span>
             </div>
           </div>
 
           <Button onClick={submit} disabled={!valid} className="h-14 w-full rounded-2xl text-base font-semibold">
-            Save
+            Сохранить
           </Button>
         </div>
       </SheetContent>

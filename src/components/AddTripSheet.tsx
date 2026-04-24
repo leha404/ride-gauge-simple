@@ -27,11 +27,11 @@ export function AddTripSheet({ open, onOpenChange }: Props) {
     <Sheet open={open} onOpenChange={(o) => { onOpenChange(o); if (!o) setValue(""); }}>
       <SheetContent side="bottom" className="rounded-t-3xl border-border bg-card pb-8">
         <SheetHeader>
-          <SheetTitle className="text-2xl">Add trip</SheetTitle>
+          <SheetTitle className="text-2xl">Добавить поездку</SheetTitle>
         </SheetHeader>
         <div className="mt-6 space-y-5">
           <div>
-            <label className="text-xs uppercase tracking-widest text-muted-foreground">Distance</label>
+            <label className="text-xs uppercase tracking-widest text-muted-foreground">Расстояние</label>
             <div className="relative mt-2">
               <Input
                 type="number"
@@ -42,17 +42,17 @@ export function AddTripSheet({ open, onOpenChange }: Props) {
                 autoFocus
                 className="num h-16 rounded-2xl border-border bg-secondary pr-14 text-3xl font-semibold"
               />
-              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground">km</span>
+              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground">км</span>
             </div>
           </div>
           <div className="rounded-2xl bg-secondary/60 p-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Will use</span>
-              <span className="num font-medium">{used.toFixed(2)} L</span>
+              <span className="text-muted-foreground">Будет израсходовано</span>
+              <span className="num font-medium">{used.toFixed(2)} л</span>
             </div>
             <div className="mt-1 flex justify-between">
-              <span className="text-muted-foreground">Fuel after</span>
-              <span className="num font-medium">{after.toFixed(2)} L</span>
+              <span className="text-muted-foreground">Останется топлива</span>
+              <span className="num font-medium">{after.toFixed(2)} л</span>
             </div>
           </div>
           <Button
@@ -60,7 +60,7 @@ export function AddTripSheet({ open, onOpenChange }: Props) {
             disabled={!valid}
             className="h-14 w-full rounded-2xl text-base font-semibold"
           >
-            Save trip
+            Сохранить поездку
           </Button>
         </div>
       </SheetContent>
