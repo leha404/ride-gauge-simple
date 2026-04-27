@@ -1,0 +1,19 @@
+---
+description: Project context and feature brief expectations
+alwaysApply: true
+---
+
+# MotoApp Project Context
+
+- Use `docs/project-map.md` as the default architecture map before planning feature changes.
+- Keep fuel domain logic in `src/state/fuel.tsx` (or dedicated domain helpers), not in page-level UI components.
+- Keep persistence logic in `src/lib/storage.ts` or nearby storage service files.
+- For each new feature, start from a short brief:
+  - Goal
+  - Constraints
+  - UX flow
+  - Touched files
+  - Acceptance criteria
+  - Out of scope
+- For substantial edits, validate with `npm run lint` and `npm run test`.
+
