@@ -23,6 +23,7 @@ type FuelContextValue = {
   resetSettings: () => void;
   deleteEntry: (id: string) => void;
   clearHistory: () => void;
+  importHistory: (entries: HistoryEntry[]) => number;
 };
 
 const FuelContext = createContext<FuelContextValue | null>(null);
@@ -93,6 +94,19 @@ export function FuelProvider({ children }: { children: ReactNode }) {
   const resetSettings = useCallback(() => setSettings(DEFAULT_SETTINGS), []);
   const deleteEntry = useCallback((id: string) => setHistory((h) => h.filter((e) => e.id !== id)), []);
   const clearHistory = useCallback(() => setHistory([]), []);
+  const importHistory = useCallback((entries: HistoryEntry[]) => {
+    const normalized = entries
+      .map((entry) => ({
+        ...entry,
+        id:
+          typeof entry.id === "string" && entry.id.trim()
+            ? entry.id
+            : newId(),
+      }))
+      .sort((a, b) => b.timestamp - a.timestamp);
+    setHistory(normalized);
+    return normalized.length;
+  }, []);
 
   const value = useMemo<FuelContextValue>(() => {
     const percent = settings.tankCapacity > 0 ? (fuel / settings.tankCapacity) * 100 : 0;
@@ -112,8 +126,9 @@ export function FuelProvider({ children }: { children: ReactNode }) {
       resetSettings,
       deleteEntry,
       clearHistory,
+      importHistory,
     };
-  }, [settings, fuel, history, addTrip, addLiters, setExact, fillToFull, updateSettings, resetSettings, deleteEntry, clearHistory]);
+  }, [settings, fuel, history, addTrip, addLiters, setExact, fillToFull, updateSettings, resetSettings, deleteEntry, clearHistory, importHistory]);
 
   return <FuelContext.Provider value={value}>{children}</FuelContext.Provider>;
 }

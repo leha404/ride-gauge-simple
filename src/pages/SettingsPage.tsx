@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useFuel } from "@/state/fuel";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_SETTINGS } from "@/lib/storage";
+import { DEFAULT_SETTINGS, HistoryEntry } from "@/lib/storage";
+import { toast } from "@/components/ui/use-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,9 +17,10 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function SettingsPage() {
-  const { settings, updateSettings, resetSettings, clearHistory } = useFuel();
+  const { settings, history, updateSettings, resetSettings, clearHistory, importHistory } = useFuel();
   const [tank, setTank] = useState(String(settings.tankCapacity));
   const [cons, setCons] = useState(String(settings.consumption));
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setTank(String(settings.tankCapacity));
@@ -29,6 +31,78 @@ export default function SettingsPage() {
   const consN = parseFloat(cons);
   const dirty = tankN !== settings.tankCapacity || consN !== settings.consumption;
   const valid = Number.isFinite(tankN) && tankN > 0 && Number.isFinite(consN) && consN > 0;
+
+  const isValidEntry = (value: unknown): value is HistoryEntry => {
+    if (!value || typeof value !== "object") return false;
+    const entry = value as Partial<HistoryEntry>;
+    const validType = entry.type === "trip" || entry.type === "refuel" || entry.type === "set";
+    return (
+      typeof entry.id === "string" &&
+      entry.id.trim().length > 0 &&
+      validType &&
+      typeof entry.value === "number" &&
+      Number.isFinite(entry.value) &&
+      typeof entry.fuelAfter === "number" &&
+      Number.isFinite(entry.fuelAfter) &&
+      typeof entry.timestamp === "number" &&
+      Number.isFinite(entry.timestamp)
+    );
+  };
+
+  const handleExport = () => {
+    const payload = {
+      version: 1,
+      exportedAt: Date.now(),
+      history,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const date = new Date().toISOString().slice(0, 10);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ride-history-${date}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Экспорт готов", description: `Сохранено ${history.length} записей.` });
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImport = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text) as unknown;
+      let candidate: unknown = parsed;
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        "history" in parsed &&
+        Array.isArray((parsed as { history?: unknown }).history)
+      ) {
+        candidate = (parsed as { history: unknown }).history;
+      }
+      if (!Array.isArray(candidate)) {
+        throw new Error("Некорректный формат файла.");
+      }
+      const entries = candidate.filter(isValidEntry);
+      if (entries.length === 0) {
+        throw new Error("В файле нет корректных записей.");
+      }
+      const imported = importHistory(entries);
+      toast({ title: "Импорт завершен", description: `Загружено ${imported} записей.` });
+    } catch (error) {
+      toast({
+        title: "Не удалось импортировать",
+        description: error instanceof Error ? error.message : "Проверьте, что выбран JSON из экспорта приложения.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="pt-6 pb-4">
@@ -102,6 +176,22 @@ export default function SettingsPage() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <Button variant="secondary" onClick={handleExport} className="h-12 rounded-2xl">
+            Экспорт истории
+          </Button>
+          <Button variant="secondary" onClick={handleImportClick} className="h-12 rounded-2xl">
+            Импорт истории
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={handleImport}
+          />
         </div>
 
         <p className="pt-2 text-center text-xs text-muted-foreground">
