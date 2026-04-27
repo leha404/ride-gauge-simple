@@ -8,6 +8,7 @@ alwaysApply: true
 - Use `docs/project-map.md` as the default architecture map before planning feature changes.
 - Keep fuel domain logic in `src/state/fuel.tsx` (or dedicated domain helpers), not in page-level UI components.
 - Keep persistence logic in `src/lib/storage.ts` or nearby storage service files.
+- Treat iOS (Capacitor) as part of the same delivery scope for feature updates: after relevant UI/logic changes, refresh mobile artifacts with `npm run build` and `npx cap sync ios`.
 - For each new feature, start from a short brief:
   - Goal
   - Constraints
