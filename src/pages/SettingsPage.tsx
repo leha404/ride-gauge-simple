@@ -4,6 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_SETTINGS, HistoryEntry } from "@/lib/storage";
 import { toast } from "@/components/ui/use-toast";
+import { Capacitor } from "@capacitor/core";
+import { Directory, Encoding, Filesystem } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,15 +58,61 @@ export default function SettingsPage() {
       exportedAt: Date.now(),
       history,
     };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+    const exportJson = JSON.stringify(payload, null, 2);
     const date = new Date().toISOString().slice(0, 10);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ride-history-${date}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast({ title: "Экспорт готов", description: `Сохранено ${history.length} записей.` });
+    const fileName = `ride-history-${date}.json`;
+
+    const exportWeb = () => {
+      const blob = new Blob([exportJson], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const exportNative = async () => {
+      await Filesystem.writeFile({
+        path: fileName,
+        data: exportJson,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+      const uri = await Filesystem.getUri({
+        path: fileName,
+        directory: Directory.Documents,
+      });
+      await Share.share({
+        title: "Экспорт истории поездок",
+        text: "Файл истории поездок MotoApp",
+        url: uri.uri,
+        dialogTitle: "Сохранить или отправить файл",
+      });
+    };
+
+    const runExport = async () => {
+      try {
+        if (Capacitor.isNativePlatform()) {
+          await exportNative();
+          toast({
+            title: "Экспорт готов",
+            description: "Открыто системное меню: сохраните файл в «Файлы» или отправьте его.",
+          });
+          return;
+        }
+        exportWeb();
+        toast({ title: "Экспорт готов", description: `Сохранено ${history.length} записей.` });
+      } catch {
+        toast({
+          title: "Не удалось экспортировать",
+          description: "Попробуйте еще раз. Если ошибка повторится, сообщите мне - добавлю резервный формат.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    void runExport();
   };
 
   const handleImportClick = () => {
